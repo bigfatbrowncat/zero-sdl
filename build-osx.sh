@@ -21,7 +21,7 @@ g++ src/entry/input.cpp \
     -Ibgfx/include \
     -Ibgfx/3rdparty \
     -Isdl2-prefix/include \
-    -framework Cocoa -framework QuartzCore -framework OpenGL \
+    -framework Cocoa -framework OpenGL \
     bgfx/.build/osx64_clang/bin/libbgfxDebug.a \
     `sdl2-prefix/bin/sdl2-config --libs` \
     -DENTRY_CONFIG_USE_SDL=1 \
