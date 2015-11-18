@@ -1,13 +1,14 @@
 BASE_PWD=`pwd`
 export SDL2_DIR=${BASE_PWD}/sdl2-prefix
 
-#(cd SDL2-2.0.3 && \
-#./configure --prefix=${SDL2_DIR} --exec-prefix=${SDL2_DIR} --without-x && \
-#make && make install)
+(cd SDL2-2.0.3 && \
+./configure --prefix=${SDL2_DIR} --exec-prefix=${SDL2_DIR} --without-x && \
+make && make install)
 
-#(cd bgfx && \
-#../bx/tools/bin/darwin/genie --with-tools --gcc=osx --with-sdl gmake && \
-#make -C .build/projects/gmake-osx config=debug64)
+(cd bgfx && patch -f -p1 -r - < ../patches/bgfx-build.patch)
+(cd bgfx && \
+../bx/tools/bin/darwin/genie --with-tools --gcc=osx --with-sdl gmake && \
+make -C .build/projects/gmake-osx config=debug64)
 
 g++ src/entry/input.cpp \
     src/entry/entry.cpp \

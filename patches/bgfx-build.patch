@@ -1,0 +1,44 @@
+diff --git a/scripts/genie.lua b/scripts/genie.lua
+index 9512cc5..e941fca 100644
+--- a/scripts/genie.lua
++++ b/scripts/genie.lua
+@@ -83,11 +83,11 @@ function copyLib()
+ end
+ 
+ if _OPTIONS["with-sdl"] then
+-	if os.is("windows") then
++--	if os.is("windows") then
+ 		if not os.getenv("SDL2_DIR") then
+ 			print("Set SDL2_DIR enviroment variable.")
+ 		end
+-	end
++--	end
+ end
+ 
+ if _OPTIONS["with-profiler"] then
+@@ -134,11 +134,12 @@ function exampleProject(_name)
+ 		defines { "ENTRY_CONFIG_USE_SDL=1" }
+ 		links   { "SDL2" }
+ 
+-		configuration { "x32", "windows" }
+-			libdirs { "$(SDL2_DIR)/lib/x86" }
++		libdirs { "$(SDL2_DIR)/lib" }
++--		configuration { "x32", "windows" }
++--			libdirs { "$(SDL2_DIR)/lib/x86" }
+ 
+-		configuration { "x64", "windows" }
+-			libdirs { "$(SDL2_DIR)/lib/x64" }
++--		configuration { "x64", "windows" }
++--			libdirs { "$(SDL2_DIR)/lib/x64" }
+ 
+ 		configuration {}
+ 	end
+@@ -320,7 +321,7 @@ function exampleProject(_name)
+ 	configuration { "osx" }
+ 		linkoptions {
+ 			"-framework Cocoa",
+-			"-framework Metal",
++--			"-framework Metal",
+ 			"-framework QuartzCore",
+ 			"-framework OpenGL",
+ 		}
