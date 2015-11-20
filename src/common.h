@@ -1,14 +1,17 @@
-/*
- * Copyright 2011-2015 Branimir Karadzic. All rights reserved.
- * License: http://www.opensource.org/licenses/BSD-2-Clause
- */
+#ifndef COMMON_H
+#define COMMON_H
 
-#ifndef COMMON_H_HEADER_GUARD
-#define COMMON_H_HEADER_GUARD
+#include <stdio.h>
+#include <unistd.h>
 
-#include <bx/timer.h>
-#include <bx/fpumath.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 
-#include "entry/entry.h"
+#include <bgfx/bgfx.h>
+#include <bgfx/bgfxplatform.h>
+#include <bx/uint32_t.h>
 
-#endif // COMMON_H_HEADER_GUARD
+#define LOG_GOOD(format, ...) { /*printf("%s (%s)", __FILE__, __LINE__);*/ printf(format "\n", ## __VA_ARGS__); fflush(stdout); }
+#define LOG_BAD(format, ...) { /*printf("%s (%s)", __FILE__, __LINE__);*/ fprintf(stderr, format "\n", ## __VA_ARGS__); fflush(stderr); }
+
+#endif
