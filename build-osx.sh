@@ -10,12 +10,12 @@ make && make install)
 ../bx/tools/bin/darwin/genie --with-tools --gcc=osx --with-sdl gmake && \
 make -C .build/projects/gmake-osx config=debug64)
 
-g++ src/entry/input.cpp \
-    src/entry/entry.cpp \
-	src/entry/entry_sdl.cpp \
-    src/entry/dbg.cpp \
-    src/entry/cmd.cpp \
-    src/helloworld.cpp \
+#    src/entry/entry.cpp \
+#    src/entry/entry_sdl.cpp \
+#    src/entry/dbg.cpp \
+#    src/entry/cmd.cpp \
+#    src/entry/input.cpp \
+g++ -g3 -O0 src/helloworld.cpp \
     -Ibx/include \
     -Ibx/include/compat/osx \
     -Ibgfx/include \
