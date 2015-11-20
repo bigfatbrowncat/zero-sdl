@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 #include <bgfx/bgfx.h>
@@ -6,17 +7,17 @@
 #include <unistd.h>
 #include "logo.h"
 
-//#define WINDOW_WIDTH		800
-//#define WINDOW_HEIGHT		600
+#define LOG_GOOD(format, ...) { /*printf("%s (%s)", __FILE__, __LINE__);*/ printf(format, ## __VA_ARGS__); printf("\n"); fflush(stdout); }
+#define LOG_BAD(format, ...) { /*printf("%s (%s)", __FILE__, __LINE__);*/ fprintf(stderr, format, ## __VA_ARGS__); printf("\n"); fflush(stderr); }
 
 enum EventResult {
-	erNoEvent, erProcessed, erExit
+	erProcessed, erExit
 };
 
-static EventResult processEvent() {
+static EventResult processEvents() {
 	bool exit = false;
 	SDL_Event event;
-	if (SDL_PollEvent(&event)) {
+	while (SDL_PollEvent(&event)) {
 		switch (event.type)
 		{
 		case SDL_QUIT:
@@ -356,34 +357,27 @@ static EventResult processEvent() {
 		}
 		if (exit) {
 			return erExit;
-		} else {
-			return erProcessed;
 		}
-	} else {
+	} /*else {
 		return erNoEvent;
-	}
+	}*/
+	return erProcessed;
 }
 
 
 SDL_Window* window = NULL;
+SDL_GLContext context;
 
 volatile bool finish = false;
-volatile bool renderingStarted = false;
 volatile bool renderingFinished = false;
 
-uint32_t my_callbackfunc(Uint32 interval, void *param)
+int my_callbackfunc(void *param)
 {
-	int width = 1280;
-	int height = 720;
+	LOG_GOOD("Rendering thread started");
 
-	SDL_Init(SDL_INIT_VIDEO);
-	window = SDL_CreateWindow("bgfx x",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		width, height,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	int width, height;
 
-	renderingStarted = true;
-
+	SDL_GL_MakeCurrent(window, context);
 	SDL_GetWindowSize(window, &width, &height);
 
 	uint32_t debug = BGFX_DEBUG_TEXT;
@@ -407,8 +401,8 @@ uint32_t my_callbackfunc(Uint32 interval, void *param)
 		);
 
 	while (!finish) {
-		usleep(10000);
-		printf("@");fflush(stdout);
+		usleep(1000000 / 40);
+		//printf("@");fflush(stdout);
 
 		SDL_GetWindowSize(window, &width, &height);
 
@@ -441,32 +435,54 @@ uint32_t my_callbackfunc(Uint32 interval, void *param)
 
 	bgfx::shutdown();
 
-	SDL_DestroyWindow(window);
-
+	LOG_GOOD("Rendering thread finished");
 	renderingFinished = true;
 	return 0;
 }
 
 int main(int _argc, char** _argv)
 {
-	SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER);
+	LOG_GOOD("Initializing SDL");
+	if (SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER | SDL_INIT_VIDEO) != 0) {
+		LOG_BAD("SDL_Init failed: %s", SDL_GetError());
+		exit(1);
+	}
+	
+	LOG_GOOD("Creating SDL Window");
+	int width = 800;
+	int height = 600;
+	window = SDL_CreateWindow("bgfx with SDL2",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		width, height,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
-	SDL_TimerID my_timer_id = SDL_AddTimer(0, my_callbackfunc, NULL);
+	LOG_GOOD("Starting rendering thread");
+	//SDL_TimerID my_timer_id = SDL_AddTimer(0, my_callbackfunc, NULL);
+	
+	context = SDL_GL_GetCurrentContext();
+	
+	SDL_Thread *thread = SDL_CreateThread(my_callbackfunc, "Rendering thread", (void *)NULL);
 
 	// Waiting for the render thread to start
-	while (!renderingStarted) { usleep(1); }
+	//while (!renderingStarted) { usleep(1); }
 
-	while (processEvent() != erExit)
+	LOG_GOOD("Starting event processing");
+	while (processEvents() != erExit)
 	{
-		printf("!");fflush(stdout);
-		usleep(100);
+		//printf("!");fflush(stdout);
+		//usleep(100);
 	}
+
+	LOG_GOOD("Event processing finished");
 
 	finish = true;
 
 	// Waiting for the render thread to stop
 	while (!renderingFinished) { usleep(1); }
 
+	LOG_GOOD("Destroying the window");
+	SDL_DestroyWindow(window);
+	LOG_GOOD("Quitting SDL");
 	SDL_Quit();
 
 	//return m_thread.getExitCode();

@@ -11,12 +11,12 @@ make && make install)
 ../bx/tools/bin/windows/genie --with-tools --gcc=mingw-gcc --with-sdl gmake && \
 make -C .build/projects/gmake-mingw-gcc config=debug64 -f bgfx.make)
 
+#    src/entry/input.cpp \
+#    src/entry/entry.cpp \
+#    src/entry/entry_sdl.cpp \
+#    src/entry/dbg.cpp \
+#    src/entry/cmd.cpp \
 g++ -static -static-libgcc -static-libstdc++ \
-    src/entry/input.cpp \
-    src/entry/entry.cpp \
-	src/entry/entry_sdl.cpp \
-    src/entry/dbg.cpp \
-    src/entry/cmd.cpp \
     src/helloworld.cpp \
     -Ibx/include \
     -Ibx/include/compat/mingw \
@@ -27,5 +27,6 @@ g++ -static -static-libgcc -static-libstdc++ \
     `sdl2-prefix/bin/sdl2-config --libs` \
     -lpsapi -lm -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid \
     -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -DWIN32 -DENTRY_CONFIG_USE_SDL=1 \
+	-mconsole \
     -o helloworld.exe && \
 strip helloworld.exe --strip-all
