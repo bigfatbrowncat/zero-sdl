@@ -1,5 +1,5 @@
 #include "common.h"
-#include "controller.h"
+#include "event_handler.h"
 
 EventResult processEvents() {
 	bool exit = false;

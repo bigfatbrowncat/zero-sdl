@@ -11,15 +11,10 @@ make && make install)
 ../bx/tools/bin/windows/genie --with-tools --gcc=mingw-gcc --with-sdl gmake && \
 make -C .build/projects/gmake-mingw-gcc config=debug64 -f bgfx.make)
 
-#    src/entry/input.cpp \
-#    src/entry/entry.cpp \
-#    src/entry/entry_sdl.cpp \
-#    src/entry/dbg.cpp \
-#    src/entry/cmd.cpp \
 g++ -static -static-libgcc -static-libstdc++ \
-    src/helloworld.cpp \
-    src/controller.cpp \
-    src/renderer.cpp \
+	src/helloworld.cpp \
+	src/drawing.cpp \
+	src/event_handler.cpp \
     -Ibx/include \
     -Ibx/include/compat/mingw \
     -Ibgfx/include \
