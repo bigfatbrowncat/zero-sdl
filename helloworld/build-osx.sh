@@ -3,9 +3,10 @@ export SDL2_DIR=${BASE_PWD}/sdl2-prefix
 
 mkdir -p target-osx && \
 g++ -g3 -O0 \
-	src/helloworld.cpp \
+	${BASE_PWD}/common-src/start.cpp \
 	src/drawing.cpp \
 	src/event_handler.cpp \
+    -I${BASE_PWD}/common-src \
     -I${BASE_PWD}/bx/include \
     -I${BASE_PWD}/bx/include/compat/osx \
     -I${BASE_PWD}/bgfx/include \

@@ -1,7 +1,7 @@
 #include "common.h"
+#include "common.h"
 #include "event_handler.h"
 #include "drawing.h"
-#include "bgfx_utils.h"
 
 #define ERROR_SDL_INIT			1
 #define ERROR_CREATE_WINDOW		2
@@ -12,7 +12,7 @@ int eventFilter(void* window, const SDL_Event *event)
 	if (event->type == SDL_WINDOWEVENT &&
 		event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 	{
-		draw((SDL_Window*)window);
+		drawing_frame((SDL_Window*)window);
 	}
 	return 1;
 }
@@ -39,15 +39,17 @@ int main(int _argc, char** _argv)
 		exit(ERROR_CREATE_WINDOW);
 	}
 
-	initDrawing(window);
+	drawing_initialize(window);
 
 	SDL_SetEventFilter((SDL_EventFilter)eventFilter, window);
 
 	LOG_GOOD("Starting event processing");
 	while (processEvents() != erExit)
 	{
-		draw(window);
+		drawing_frame(window);
 	}
+	
+	drawing_finalize(window);
 	
 	LOG_GOOD("Destroying the window");
 	SDL_DestroyWindow(window);

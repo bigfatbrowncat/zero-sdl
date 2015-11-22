@@ -107,7 +107,7 @@ bgfx::UniformHandle u_mtx;
 bgfx::UniformHandle u_lightDirTime;
 bgfx::ProgramHandle raymarching;
 
-void initDrawing(SDL_Window* window) {
+void drawing_initialize(SDL_Window* window) {
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
@@ -154,7 +154,7 @@ void initDrawing(SDL_Window* window) {
 }
 
 
-void draw(SDL_Window* window) {
+void drawing_frame(SDL_Window* window) {
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 	bgfx::reset(width, height, reset);
@@ -232,4 +232,10 @@ void draw(SDL_Window* window) {
 	// Advance to next frame. Rendering thread will be kicked to
 	// process submitted rendering primitives.
 	bgfx::frame();
+}
+
+void drawing_finalize(SDL_Window* window) {
+	bgfx::destroyProgram(raymarching);
+	bgfx::destroyUniform(u_mtx);
+	bgfx::destroyUniform(u_lightDirTime);
 }

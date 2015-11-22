@@ -5,7 +5,7 @@
 uint32_t reset = BGFX_RESET_VSYNC;
 uint32_t debug = BGFX_DEBUG_TEXT;
 
-void initDrawing(SDL_Window* window) {
+void drawing_initialize(SDL_Window* window) {
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
@@ -27,7 +27,7 @@ void initDrawing(SDL_Window* window) {
 		);
 }
 
-void draw(SDL_Window* window) {
+void drawing_frame(SDL_Window* window) {
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
@@ -55,4 +55,7 @@ void draw(SDL_Window* window) {
 	// Advance to next frame. Rendering thread will be kicked to
 	// process submitted rendering primitives.
 	bgfx::frame();
+}
+
+void drawing_finalize(SDL_Window* window) {
 }
