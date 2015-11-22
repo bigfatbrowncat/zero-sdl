@@ -9,12 +9,13 @@ mkdir -p target-osx && \
 											-o target-osx/fs_raymarching.bin \
 											--type fragment --platform osx -i ../bgfx/src/ && \
 g++ -g3 -O0 \
-	src/cube.cpp \
+	${BASE_PWD}/common-src/start.cpp \
 	src/drawing.cpp \
 	src/bgfx_utils.cpp \
 	src/event_handler.cpp \
     ${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbuffercompression.cpp \
     ${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp \
+    -I${BASE_PWD}/common-src \
     -I${BASE_PWD}/bx/include \
     -I${BASE_PWD}/bx/include/compat/osx \
     -I${BASE_PWD}/bgfx/include \

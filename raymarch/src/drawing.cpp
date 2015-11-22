@@ -2,6 +2,9 @@
 #include "drawing.h"
 #include "bgfx_utils.h"
 
+#include <bx/fpumath.h>
+#include <bx/timer.h>
+
 uint32_t reset = BGFX_RESET_VSYNC;
 uint32_t debug = BGFX_DEBUG_TEXT;
 
