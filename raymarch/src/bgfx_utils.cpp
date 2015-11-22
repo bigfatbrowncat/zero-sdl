@@ -51,7 +51,6 @@ void* load(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const char* _fi
 
 void* load(const char* _filePath, uint32_t* _size)
 {
-	
 	return load(myFileReader, myAllocator, _filePath, _size);
 }
 
@@ -62,9 +61,6 @@ void unload(void* _ptr)
 
 static const bgfx::Memory* loadMem(bx::FileReaderI* _reader, const char* _filePath)
 {
-	printf("!!!");fflush(stdout);
-	printf("0 fp: %s\n", _filePath);fflush(stdout);
-
 	if (0 == bx::open(_reader, _filePath) )
 	{
 		uint32_t size = (uint32_t)bx::getSize(_reader);
@@ -130,10 +126,7 @@ static bgfx::ShaderHandle loadShader(bx::FileReaderI* _reader, const char* _name
 	strcat(filePath, _name);
 	strcat(filePath, ".bin");
 
-	printf("1 fp: %s\n", filePath);fflush(stdout);
 	const bgfx::Memory* mem = loadMem(_reader, filePath);
-
-	printf("1 mem: %x\n", mem);fflush(stdout);
 	return bgfx::createShader(mem);
 }
 
@@ -156,8 +149,7 @@ bgfx::ProgramHandle loadProgram(bx::FileReaderI* _reader, const char* _vsName, c
 
 bgfx::ProgramHandle loadProgram(const char* _vsName, const char* _fsName)
 {
-	bx::FileReaderI* fr = new bx::CrtFileReader();
-	return loadProgram(fr, _vsName, _fsName);
+	return loadProgram(myFileReader, _vsName, _fsName);
 }
 
 typedef unsigned char stbi_uc;
