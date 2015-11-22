@@ -27,12 +27,9 @@ void initDrawing(SDL_Window* window) {
 		);
 }
 
-void draw(SDL_Window* window, int width, int height) {
-	/*if (width == -1 || height == -1)*/ {
-		SDL_GetWindowSize(window, &width, &height);
-	}
-	printf("w: %d, %d\n", width, height);fflush(stdout);
-
+void draw(SDL_Window* window) {
+	int width, height;
+	SDL_GetWindowSize(window, &width, &height);
 
 	bgfx::reset(width, height, reset);
 

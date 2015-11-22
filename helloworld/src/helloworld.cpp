@@ -12,8 +12,7 @@ int eventFilter(void* window, const SDL_Event *event)
 	if (event->type == SDL_WINDOWEVENT &&
 		event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 	{
-		printf("f: %d, %d\n", event->window.data1, event->window.data2);fflush(stdout);
-		draw((SDL_Window*)window, event->window.data1, event->window.data2);
+		draw((SDL_Window*)window);
 	}
 	return 1;
 }
