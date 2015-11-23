@@ -42,11 +42,7 @@ int main(int _argc, char** _argv)
 	}
 
 	char* resPath = strdup(_argv[0]);
-	resPath = dirname(resPath);
-	
-	printf("respath: %s", resPath);fflush(stdout);
-	drawing_initialize(window, resPath);
-
+	drawing_initialize(window, dirname(resPath));
 	free(resPath);
 
 	SDL_SetEventFilter((SDL_EventFilter)eventFilter, window);

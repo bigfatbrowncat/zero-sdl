@@ -127,7 +127,6 @@ static bgfx::ShaderHandle loadShader(bx::FileReaderI* _reader, const char* path,
 	strcat(filePath, "/");
 	strcat(filePath, _name);
 	strcat(filePath, ".bin");
-	printf("full path: %s\n", filePath);fflush(stdout);
 
 	const bgfx::Memory* mem = loadMem(_reader, filePath);
 	return bgfx::createShader(mem);
