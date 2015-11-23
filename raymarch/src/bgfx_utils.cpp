@@ -4,6 +4,7 @@
  */
 
 #include <string.h> // strlen
+#include <limits.h> // PATH_MAX
 
 #include "common.h"
 
@@ -93,9 +94,9 @@ static void* loadMem(bx::FileReaderI* _reader, bx::AllocatorI* _allocator, const
 	return NULL;
 }
 
-static bgfx::ShaderHandle loadShader(bx::FileReaderI* _reader, const char* _name)
+static bgfx::ShaderHandle loadShader(bx::FileReaderI* _reader, const char* path, const char* _name)
 {
-	char filePath[512];
+	char filePath[PATH_MAX];
 
 	/*const char* shaderPath = "shaders/dx9/";
 
@@ -122,34 +123,36 @@ static bgfx::ShaderHandle loadShader(bx::FileReaderI* _reader, const char* _name
 		break;
 	}*/
 
-	strcpy(filePath, "./");
+	strcpy(filePath, path);
+	strcat(filePath, "/");
 	strcat(filePath, _name);
 	strcat(filePath, ".bin");
+	printf("full path: %s\n", filePath);fflush(stdout);
 
 	const bgfx::Memory* mem = loadMem(_reader, filePath);
 	return bgfx::createShader(mem);
 }
 
-bgfx::ShaderHandle loadShader(const char* _name)
+bgfx::ShaderHandle loadShader(const char* path, const char* _name)
 {
-	return loadShader(myFileReader, _name);
+	return loadShader(myFileReader, path, _name);
 }
 
-bgfx::ProgramHandle loadProgram(bx::FileReaderI* _reader, const char* _vsName, const char* _fsName)
+bgfx::ProgramHandle loadProgram(bx::FileReaderI* _reader, const char* path, const char* _vsName, const char* _fsName)
 {
-	bgfx::ShaderHandle vsh = loadShader(_reader, _vsName);
+	bgfx::ShaderHandle vsh = loadShader(_reader, path, _vsName);
 	bgfx::ShaderHandle fsh = BGFX_INVALID_HANDLE;
 	if (NULL != _fsName)
 	{
-		fsh = loadShader(_reader, _fsName);
+		fsh = loadShader(_reader, path, _fsName);
 	}
 
 	return bgfx::createProgram(vsh, fsh, true /* destroy shaders when program is destroyed */);
 }
 
-bgfx::ProgramHandle loadProgram(const char* _vsName, const char* _fsName)
+bgfx::ProgramHandle loadProgram(const char* path, const char* _vsName, const char* _fsName)
 {
-	return loadProgram(myFileReader, _vsName, _fsName);
+	return loadProgram(myFileReader, path, _vsName, _fsName);
 }
 
 typedef unsigned char stbi_uc;

@@ -110,7 +110,7 @@ bgfx::UniformHandle u_mtx;
 bgfx::UniformHandle u_lightDirTime;
 bgfx::ProgramHandle raymarching;
 
-void drawing_initialize(SDL_Window* window) {
+void drawing_initialize(SDL_Window* window, const char* resourcesPath) {
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
@@ -151,7 +151,7 @@ void drawing_initialize(SDL_Window* window) {
 	u_lightDirTime = bgfx::createUniform("u_lightDirTime", bgfx::UniformType::Vec4);
 
 	// Create program from shaders.
-	raymarching = loadProgram("vs_raymarching", "fs_raymarching");
+	raymarching = loadProgram(resourcesPath, "vs_raymarching", "fs_raymarching");
 
 	timeOffset = bx::getHPCounter();
 }

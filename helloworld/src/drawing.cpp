@@ -5,7 +5,7 @@
 uint32_t reset = BGFX_RESET_VSYNC;
 uint32_t debug = BGFX_DEBUG_TEXT;
 
-void drawing_initialize(SDL_Window* window) {
+void drawing_initialize(SDL_Window* window, const char* /*resourcesPath*/) {
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
