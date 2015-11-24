@@ -7,11 +7,13 @@ ifeq ($(platform),windows)
 	PLATFORM_LDFLAGS=${BASE_PWD}/bgfx/.build/win64_mingw-gcc/bin/libbgfxDebug.a \
 	                 -lgdi32 -lpsapi -lm -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid \
 	                 -mwindows -mconsole -m64 -Wl,--gc-sections -static -static-libgcc -static-libstdc++
-					 
+	PLATFORM_INCLUDES=-I${BASE_PWD}/bx/include/compat/mingw
+	
 else ifeq ($(platform), osx)
     TARGET=target-osx
 	PLATFORM_LDFLAGS=${BASE_PWD}/bgfx/.build/osx64_clang/bin/libbgfxDebug.a \
 	                 -framework Cocoa -framework OpenGL
+	PLATFORM_INCLUDES=-I${BASE_PWD}/bx/include/compat/osx
 	                 
 else 
     $(error You should define a supported platform: platform=windows or platform=osx)
@@ -61,9 +63,9 @@ ${TARGET}/${TARGET_BINARY}: ${CSOURCES}
 		${CSOURCES} \
 		${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbuffercompression.cpp \
 		${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp \
+		${PLATFORM_INCLUDES} \
 		-I${BASE_PWD}/common-src \
 		-I${BASE_PWD}/bx/include \
-		-I${BASE_PWD}/bx/include/compat/mingw \
 		-I${BASE_PWD}/bgfx/include \
 		-I${BASE_PWD}/bgfx/3rdparty \
 		-I${BASE_PWD}/sdl2-prefix/include \
