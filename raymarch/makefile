@@ -8,13 +8,13 @@ ifeq ($(platform),windows)
 	                 -lgdi32 -lpsapi -lm -luser32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid \
 	                 -mwindows -mconsole -m64 -Wl,--gc-sections -static -static-libgcc -static-libstdc++
 	PLATFORM_INCLUDES=-I${BASE_PWD}/bx/include/compat/mingw
-	
+	PLATFORM_DEFINES=-D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -DWIN32
 else ifeq ($(platform), osx)
     TARGET=target-osx
 	PLATFORM_LDFLAGS=${BASE_PWD}/bgfx/.build/osx64_clang/bin/libbgfxDebug.a \
 	                 -framework Cocoa -framework OpenGL
 	PLATFORM_INCLUDES=-I${BASE_PWD}/bx/include/compat/osx
-	                 
+	PLATFORM_DEFINES=
 else 
     $(error You should define a supported platform: platform=windows or platform=osx)
 endif
@@ -59,7 +59,7 @@ binary: ${TARGET}/${TARGET_BINARY}
 ${TARGET}/${TARGET_BINARY}: ${CSOURCES}
 	mkdir -p ${TARGET} && \
 	g++ ${CXXFLAGS} ${DEBUG_RELEASE} \
-		-D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -DWIN32 -DENTRY_CONFIG_USE_SDL=1 \
+		${PLATFORM_DEFINES} \
 		${CSOURCES} \
 		${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbuffercompression.cpp \
 		${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp \
