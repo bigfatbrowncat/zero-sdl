@@ -6,6 +6,8 @@
 #include <string.h> // strlen
 #include <limits.h> // PATH_MAX
 
+#include <assert.h>
+
 #include "common.h"
 
 #include <tinystl/allocator.h>
@@ -98,37 +100,42 @@ static bgfx::ShaderHandle loadShader(bx::FileReaderI* _reader, const char* path,
 {
 	char filePath[PATH_MAX];
 
-	/*const char* shaderPath = "shaders/dx9/";
+	const char* shaderPath = "dx9";
 
 	switch (bgfx::getRendererType() )
 	{
 	case bgfx::RendererType::Direct3D11:
 	case bgfx::RendererType::Direct3D12:
-		shaderPath = "shaders/dx11/";
+		shaderPath = "dx11";
 		break;
 
 	case bgfx::RendererType::OpenGL:
-		shaderPath = "shaders/glsl/";
+		shaderPath = "glsl";
 		break;
 
 	case bgfx::RendererType::Metal:
-		shaderPath = "shaders/metal/";
+		shaderPath = "metal";
 		break;
 
 	case bgfx::RendererType::OpenGLES:
-		shaderPath = "shaders/gles/";
+		shaderPath = "gles";
 		break;
 
 	default:
 		break;
-	}*/
+	}
 
 	strcpy(filePath, path);
+	strcat(filePath, "/");
+	strcat(filePath, shaderPath);
 	strcat(filePath, "/");
 	strcat(filePath, _name);
 	strcat(filePath, ".bin");
 
+	printf("Loading shader: %s\n", filePath);
+
 	const bgfx::Memory* mem = loadMem(_reader, filePath);
+	assert(mem != NULL);
 	return bgfx::createShader(mem);
 }
 
