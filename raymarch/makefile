@@ -9,19 +9,22 @@ ifeq ($(platform),windows)
 	                 -mwindows -mconsole -m64 -Wl,--gc-sections -static -static-libgcc -static-libstdc++
 	PLATFORM_INCLUDES=-I${BASE_PWD}/bx/include/compat/mingw
 	PLATFORM_DEFINES=-D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -DWIN32
+	SHADERC=${BASE_PWD}/bgfx/.build/win64_mingw-gcc/bin/shadercDebug
+	STRIP_OPTS=--strip-all
 else ifeq ($(platform), osx)
     TARGET=target-osx
 	PLATFORM_LDFLAGS=${BASE_PWD}/bgfx/.build/osx64_clang/bin/libbgfxDebug.a \
 	                 -framework Cocoa -framework OpenGL
 	PLATFORM_INCLUDES=-I${BASE_PWD}/bx/include/compat/osx
 	PLATFORM_DEFINES=
+	SHADERC=${BASE_PWD}/bgfx/.build/osx64_clang/bin/shadercDebug
+	STRIP_OPTS=-Sx
 else 
     $(error You should define a supported platform: platform=windows or platform=osx)
 endif
 
 BASE_PWD=${shell pwd}/..
 SDL2_DIR=${BASE_PWD}/sdl2-prefix
-SHADERC=${BASE_PWD}/bgfx/.build/win64_mingw-gcc/bin/shadercDebug
 TARGET_BINARY_NAME=raymarch
 TARGET_BINARY=${TARGET_BINARY_NAME}${EXE_SUFFIX}
 
@@ -42,9 +45,21 @@ LDFLAGS:=${LDFLAGS} ${shell ../sdl2-prefix/bin/sdl2-config --libs} ${PLATFORM_LD
 
 all: binary shaders
 
-shaders: shader_dx11
+ifeq ($(platform),windows)
 
-shader_dx11: ${TARGET}/dx11/vs_raymarching.bin ${TARGET}/dx11/fs_raymarching.bin
+shaders: shader_windows
+shader_windows: ${TARGET}/dx11/vs_raymarching.bin ${TARGET}/dx11/fs_raymarching.bin
+
+else ifeq ($(platform), osx)
+
+shaders: shader_osx
+shader_osx: ${TARGET}/glsl/vs_raymarching.bin ${TARGET}/glsl/fs_raymarching.bin
+
+else
+
+# Not supported yet
+
+endif
 
 ${TARGET}/dx11/vs_raymarching.bin: src/vs_raymarching.sc
 	mkdir -p ${TARGET}/dx11/ && \
@@ -53,6 +68,14 @@ ${TARGET}/dx11/vs_raymarching.bin: src/vs_raymarching.sc
 ${TARGET}/dx11/fs_raymarching.bin: src/fs_raymarching.sc
 	mkdir -p ${TARGET}/dx11/ && \
 	${SHADERC} -f src/fs_raymarching.sc -o ${TARGET}/dx11/fs_raymarching.bin --type fragment --platform windows -p ps_4_0 -O 3 -i ${BASE_PWD}/bgfx/src/
+
+${TARGET}/glsl/vs_raymarching.bin: src/vs_raymarching.sc
+	mkdir -p ${TARGET}/glsl/ && \
+	${SHADERC} -f src/vs_raymarching.sc -o ${TARGET}/glsl/vs_raymarching.bin --type vertex --platform linux -p 120 -i ${BASE_PWD}/bgfx/src/
+
+${TARGET}/glsl/fs_raymarching.bin: src/fs_raymarching.sc
+	mkdir -p ${TARGET}/glsl/ && \
+	${SHADERC} -f src/fs_raymarching.sc -o ${TARGET}/glsl/fs_raymarching.bin --type fragment --platform linux -p 120 -i ${BASE_PWD}/bgfx/src/
 
 binary: ${TARGET}/${TARGET_BINARY}
 
@@ -72,7 +95,7 @@ ${TARGET}/${TARGET_BINARY}: ${CSOURCES}
 		-L${BASE_PWD}/sdl2-prefix/lib \
 		${LDFLAGS} \
 		-o ${TARGET}/${TARGET_BINARY} && \
-	strip ${TARGET}/${TARGET_BINARY} --strip-all
+	strip ${TARGET}/${TARGET_BINARY} ${STRIP_OPTS}
 	
 clean:
 	rm -rf ${TARGET}
