@@ -86,6 +86,8 @@ ${TARGET}/${TARGET_BINARY}: ${CSOURCES}
 		${CSOURCES} \
 		${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbuffercompression.cpp \
 		${BASE_PWD}/bgfx/3rdparty/ib-compress/indexbufferdecompression.cpp \
+		-DSTB_IMAGE_IMPLEMENTATION \
+		${BASE_PWD}/bgfx/3rdparty/stb/stb_image.c \
 		${PLATFORM_INCLUDES} \
 		-I${BASE_PWD}/common-src \
 		-I${BASE_PWD}/bx/include \

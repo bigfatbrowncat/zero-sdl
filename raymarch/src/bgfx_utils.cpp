@@ -4,7 +4,7 @@
  */
 
 #include <string.h> // strlen
-#include <limits.h> // PATH_MAX
+#include <sys/syslimits.h> // PATH_MAX
 
 #include <assert.h>
 
@@ -22,6 +22,7 @@ namespace stl = tinystl;
 #include <bx/string.h>
 //#include "entry/entry.h"
 #include <ib-compress/indexbufferdecompression.h>
+//#include <stb/stb_image.c>
 
 #include "bgfx_utils.h"
 
@@ -164,7 +165,7 @@ bgfx::ProgramHandle loadProgram(const char* path, const char* _vsName, const cha
 typedef unsigned char stbi_uc;
 extern "C" stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int *y, int *comp, int req_comp);
 
-/*bgfx::TextureHandle loadTexture(bx::FileReaderI* _reader, const char* _name, uint32_t _flags, uint8_t _skip, bgfx::TextureInfo* _info)
+bgfx::TextureHandle loadTexture(bx::FileReaderI* _reader, const char* _name, uint32_t _flags, uint8_t _skip, bgfx::TextureInfo* _info)
 {
 	char filePath[512] = { '\0' };
 	if (NULL == strchr(_name, '/') )
@@ -239,7 +240,7 @@ extern "C" stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x
 bgfx::TextureHandle loadTexture(const char* _name, uint32_t _flags, uint8_t _skip, bgfx::TextureInfo* _info)
 {
 	return loadTexture(myFileReader, _name, _flags, _skip, _info);
-}*/
+}
 
 void calcTangents(void* _vertices, uint16_t _numVertices, bgfx::VertexDecl _decl, const uint16_t* _indices, uint32_t _numIndices)
 {
